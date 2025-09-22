@@ -97,3 +97,14 @@ class TestHangman:
         assert len(result) == expected_remaining
         assert all(l in "abcdefghijklmnopqrstuvwxyz" for l in result)
         assert len(set(result)) == len(result)
+
+    @pytest.mark.xfail(reason="game crashes with invalid inputs")
+    @pytest.mark.parametrize("invalid_inputs", [
+        ["1", "2", "3"],
+        ["!", "@", "#"],
+        ["A", "B", "C"],
+    ])
+    def test_hangman_invalid_symbols(self, run_game, invalid_inputs):
+        secret = "dog"
+        output = run_game(secret, invalid_inputs + list("dog"))
+        assert "Congratulations, you won!" in output
